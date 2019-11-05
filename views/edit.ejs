@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><%= title %> </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="screen" href="edit.css">
+
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    
+</head>
+<body>
+    <div id="main-container">
+        <label for="tableSearch"></label>
+        <input type="text" name="tableSearch" id="tableSearch" value ="" placeholder="Search..">
+        <br>
+        <br>
+        <input type="button" name="" id="" >
+        <input type="button" name="newEntry" id="newEntry" value = "New Entry"> 
+        <table class="pure-table pure-table-horizontal mainTable">
+                <thead>
+                    <tr>
+                        <th>Nesting</th>
+                        <th>Client</th>
+                        <th>Order</th>
+                        <th>Time (m)</th>
+                        <th>Machine</th>
+                        <th>Status</th>
+                        <th>Order Date*</th>
+                        <th>Program Date</th>
+                    </tr>
+                </thead>
+            
+                <tbody id="orderTableSearch" >
+                    <% output.forEach(function(table){ %>
+                    <tr class = "infoRow" value= "<%= table.id %>">
+                        <td> <%= table.nesting %></td>
+                        <td> <%= table.client %></td>
+                        <td> <%= table.jobOrder %></td>
+                        <td> <%= table.programTime.toFixed(2) %></td>
+                        <td> <%= table.fullMachineName %></td>
+                        <td> <%= table.jobComplete %></td>
+                        <td> </td>
+                        <td>
+                            <% if(table.jobDate != null){ %>
+                                <%= table.jobDate.getDate() + "/" + (table.jobDate.getMonth()+1) + "/" + table.jobDate.getFullYear()  %>
+                            <% } %>
+                        </td>
+                        <td> 
+                            <% if(table.progDate != null){ %>
+                                <%= table.progDate.getDate() + "/" + (table.progDate.getMonth()+1) + "/" + table.progDate.getFullYear()  %>
+                            <% } %>
+
+                        </td>
+                    </tr>
+                    <% })%>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="diagE" title="Edit">
+            
+        </div>
+    
+</body>
+<script src="/sendstatus.js"></script>
+</html>

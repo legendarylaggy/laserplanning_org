@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta http-equiv="refresh" content="420;url =/pons" >
+
+    <title>PONS PLANNING</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="/tone.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/main.css"> 
+</head>
+<body>
+
+<% var showGroup = false %>
+
+    <% if(title == "Order Entry"){ %>
+    <div class="mainContainer">
+        <div id="uploads"></div>
+        <div class="dropzone" id="dropzone">Drop File Here</div>
+        <p id="out"></p>
+        <p id="err"></p>
+        <table>
+            <tbody id="tableOut">
+                <tr>
+                </tr>
+            </tbody>
+        </table>
+        <div id="submitForm"></div>
+
+    </div>
+
+    <!-- START -- LASER PLANNING -->
+    <%} else if(title =="pons"){ %>
+
+    <% %>
+    <a href="/pons" style="text-decoration: none;">
+        <h1>PONS PLANNING</h1>
+    </a>
+    <br>
+    <div id="imgHolder">
+        <img id="logo" src="logo-slabinck.png" style="width:520px;">
+    </div>
+    <div id="imgHolderSF">
+        <img src="SF.png" alt="SAFETY FIRST">
+    </div>
+    <br>
+
+
+<!-- START -- INFO OVERVIEW  -->
+    <div id="overview">
+
+        <table class="overview">
+            <tr>
+                <td id="normal">Normal </td>
+                <td id="urgent">Haste </td>
+                <td id="fast">Fast </td>
+
+            </tr>
+        </table>
+        <table class="overview">
+            <tr>
+                <td class="error" id="normal">Error </td>
+                <td id="normal">Pending </td>
+                <td id="normal">Busy </td>
+                <td class="done" id="normal">Ready </td>
+
+            </tr>
+        </table>
+        <table id="orderToggle">
+            <tr>
+                <td id="showAllOrders">Expand tables</td>
+            </tr>
+            <tr>
+                <td id="opener">Order List</td>
+            </tr>
+        </table>
+    </div>
+<!-- END - INFO OVERVIEW  -->
+    <br>
+    
+<!-- MAIN TABLE GRID -->
+    <div class="tables">     
+
+<!-- START FOR LOOP / / 3 tables -->
+    <% var machine = "TC6000L" %>
+    <% for(var i = 0; i < 3 ; i++){ %>
+
+    <% if(i == 0) {machine = "TC6000L"} else if(i == 1){machine = "TC5000R"} else if(i == 2){machine = "TC3000R"} %>
+
+    <!--  MAIN TABLE LAYOUT -->
+    <% switch(i){ 
+             case 0: %>
+    <div class="one">
+        <h2>TC6000</h2>
+
+        <% break %>
+        <% case 1: %>
+        <div class="two">
+            <h2>TC5000</h2>
+
+            <% break %>
+            <% case 2: %>
+            <div class="three">
+                <h2>TC3000</h2>
+
+                <% break %>
+                <% } %>
+
+                <table class="container">
+                    <thead class="topStyle">
+                        <tr>
+                            <th id="left">
+                                <h1>Nesting</h1>
+                            </th>
+                            <th>
+                                <h1>MIP</h1>
+                            </th>
+                            <th>
+                                <h1>Material</h1>
+                            </th>
+                            <th>
+                                <h1>#</h1>
+                            </th>
+                            <th>
+                                <h1>Order</h1>
+                            </th>
+                            <th>
+                                <h1>Client</h1>
+                            <th>
+                                <h1>Time</h1>
+                            <th>
+                                <h1>Date</h1>
+                            <th>
+                                <h1>Status</h1>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% var lastG = "" %>
+                        <% var machineTime = 0 %>
+
+                        <% output.forEach(function(table){ %>
+                        <% if(table.machineType == "2" && table.machineID == machine && lastG != table.groupOrder && table.jobComplete != 0){ %>
+                        <% lastG = table.groupOrder %>
+                        <% machineTime += table.programTime}}) %>
+
+                        <tr id="time">
+                            <td id="left"></td>
+                            <td></td>
+                            <td> Select for Error </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="data">
+                                <%= machineTime  %>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <%  %>
+                        <% var lastG = "" %>
+                        <% output.forEach(function(table){ %>
+                        <% if(table.machineType == "2" && table.machineID == machine){ %>
+                        <% if(lastG != table.groupOrder || showGroup){ %>
+                        <% lastG = table.groupOrder %>
+                        <% %>
+                    <tr id="normal">
+                        <td id="left" class="eachOrder">
+                            <%= table.nesting %>
+                        </td>
+
+                        <td id="edit">
+                            <div class="squaredCheck" id="<%= table.nesting %>" value="<%= table.MIP  %>">
+                                <input type="checkbox" value="None" name="box" <% if(table.MIP) { %> checked <% }%> />
+                                <label for="<%= table.jobOrder  %>"></label>
+                            </div>
+                        </td>
+                        <td class="clicker" id="left" <% if(table.error){ %> style="border:1px solid red;" <% } %>>
+                            <%= table.material  %>
+                        </td>
+                        <td>
+                            <%= table.plateAmount %>
+                        </td>
+                        <td>
+                            <%= table.jobOrder  %>
+                        </td>
+                        <td>
+                            <%= table.client  %>
+                        </td>
+
+                        <td class="jobTime">
+                            <%= table.programTime  %>
+                        </td>
+                        <% if(table.jobDate != null){ %>
+                        <td>
+                            <%= table.jobDate.getDate() + "/" + (table.jobDate.getMonth()+1) + "/" + table.jobDate.getFullYear()  %>
+                        </td>
+                        <% } else { %>
+                        <td></td>
+                        <% } %>
+
+                        <%  %>
+
+                        <% if(table.priority == 1){ %>
+                        <% if(table.jobComplete == 1){ %>
+                        <td class="stat" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                            style="background-color: rgba(255, 243, 0, 0.4)">
+                            Pending
+                            <% }else if(table.jobComplete == 2){ %>
+                        <td class="stat" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                            style="background-color: rgba(255, 243, 0, 0.4);">
+                            Busy
+                            <% }else { %>
+                        <td class="stat" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                            style="background-color: rgba(255, 243, 0, 0.4); border:2px solid turquoise">
+                            Ready
+                            <% } %>
+                            <%  %>
+                            <% }else if(table.priority == 2){ %>
+                            <% if(table.jobComplete == 1){ %>
+                        <td class="stat" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                            style="background-color: rgba(197, 22, 45, 0.52);">Pending
+                            <% }else if(table.jobComplete == 2){ %>
+                        <td class="stat" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                            style="background-color: rgba(197, 22, 45, 0.52);">Busy
+                            <% }else { %>
+                        <td class="stat" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                            style="background-color: rgba(197, 22, 45, 0.52); border:2px solid turquoise">Ready
+                            <% } %>
+                            <%  %>
+                            <%  }else {  %>
+                            <% if(table.jobComplete == 1){ %>
+                        <td class="stat" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>">
+                            Pending
+                            <% }else if(table.jobComplete == 2){ %>
+                        <td class="stat" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>">
+                            Busy
+                            <% }else { %>
+                        <td class="stat" id="<%=table.nesting  %>" value="<%= table.jobComplete %>"
+                            style="border:2px solid turquoise">Ready
+                            <% } %>
+                            <%  } %>
+                        </td>
+                        </tr>
+                        <tr>
+                            <td class="multiSpan" colspan="9">
+                                <p><label class="errorCheck" for="errorcheck" id="<%=table.nesting  %>"" value = "
+                                        <%= table.error %>"> ERROR:<input type="checkbox" id="errorcheck"
+                                            <% if(table.error){ %> checked <% }%> /></label></p>
+                                </form>
+                            </td>
+                        </tr>
+                        <% } else { %>
+                        <tr>
+                            <td class="multiSpan" colspan="8">
+                                <p class="expand">
+
+                                    <b>
+                                        <%= table.jobOrder %></b>
+                                    <%= table.client %>
+                                </p>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }} })%>
+                    </tbody>
+                </table>
+            </div>
+            <!-- END EACH TABLE -->
+            </table>
+            <% } // 3 table forloop END %>
+        </div>
+
+        <% } // LASER CHECK END %>
+
+
+
+
+
+        <!--  POPUP DIALOG - all orders -->
+        <div id="dialog" title="Orders">
+            <input type="text" name="tableSearch" id="tableSearch" value="" placeholder="Search..">
+            <div id="allOrderTable">
+                <table id="mainOrderTable" class="pure-table pure-table-striped">
+                    <thead>
+                        <tr>
+                            <th id="left">
+                                Nesting
+                            </th>
+                            <th>
+                                Client
+                            <th>
+                                Order
+                            </th>
+                            <th>
+                                Job Time
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Machine
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableSearch">
+
+                        <%  %>
+                        <% output.forEach(function(table){ %>
+                        <tr class="pure-table-striped">
+                            <td id="left" class="eachOrder">
+                                <%= table.nesting %>
+                            </td>
+
+
+                            <td>
+                                <%= table.client  %>
+                            </td>
+
+                            <td>
+                                <%= table.jobOrder  %>
+                            </td>
+
+                            <td class="jobTime">
+                                <%= table.programTime  %>
+                            </td>
+
+                            <td>
+                                <% if(table.jobDate != null){ %>
+                                <%= table.jobDate.getDate() + "/" + (table.jobDate.getMonth()+1) + "/" + table.jobDate.getFullYear()  %>
+                                <% } %>
+                            </td>
+
+                            <td>
+                                <%= table.fullMachineName  %>
+                            </td>
+
+                            <% if(table.priority == 1){ %>
+                            <% if(table.jobComplete == 1){ %>
+                            <td class="statMini" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                                style="background-color: rgba(255, 243, 0, 0.4)">
+                                Pending
+                                <% }else if(table.jobComplete == 2){ %>
+                            <td class="statMini" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                                style="background-color: rgba(255, 243, 0, 0.4);">
+                                Busy
+                                <% }else { %>
+                            <td class="statMini" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                                style="background-color: rgba(255, 243, 0, 0.4); border:2px solid turquoise">
+                                Ready
+                                <% } %>
+                                <%  %>
+                                <% }else if(table.priority == 2){ %>
+                                <% if(table.jobComplete == 1){ %>
+                            <td class="statMini" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                                style="background-color: rgba(197, 22, 45, 0.52);">Pending
+                                <% }else if(table.jobComplete == 2){ %>
+                            <td class="statMini" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                                style="background-color: rgba(197, 22, 45, 0.52);">Busy
+                                <% }else { %>
+                            <td class="statMini" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>"
+                                style="background-color: rgba(197, 22, 45, 0.52); border:2px solid turquoise">Ready
+                                <% } %>
+                                <%  %>
+                                <%  }else {  %>
+                                <% if(table.jobComplete == 1){ %>
+                            <td class="statMini" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>">
+                                Pending
+                                <% }else if(table.jobComplete == 2){ %>
+                            <td class="statMini" id="<%=table.nesting  %>" value="<%= table.jobComplete  %>">
+                                Busy
+                                <% }else { %>
+                            <td class="statMini" id="<%=table.nesting  %>" value="<%= table.jobComplete %>"
+                                style="border:2px solid turquoise">Ready
+                                <% } %>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% })%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--  END POPUP DIALOG - all orders -->
+
+
+    </body>
+    <script src="/sendstatus.js"></script>
+    </html>

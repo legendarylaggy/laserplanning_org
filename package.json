@@ -1,0 +1,19 @@
+{
+  "name": "slabServer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Main: App started\" && index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "*",
+    "express-validator": "^5.3.1",
+    "mssql": "^4.3.3",
+    "socket.io": "^2.2.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

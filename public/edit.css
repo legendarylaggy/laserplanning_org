@@ -1,0 +1,17 @@
+#main-container {
+    
+    width: 1400px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+.mainTable{
+    margin-top: 10px;
+}
+#tableSearch{
+    width: 200px;
+    height:20px;
+}
+.infoRow:hover{
+    background-color: bisque;
+
+}
