@@ -115,7 +115,7 @@ app.post('/editInfo', (req, res) => {
       value = 0;
     }
     valueComp = value
-    statement = 'UPDATE ProgramInput set jobComplete = @jobComplete where [nesting] = @nesting ';
+    statement = 'UPDATE ProgramInput set jobComplete = @jobComplete where [nesting] = @nesting';
   } else if (check == 1) { // MIP
     if (value === false) {
       value = true
