@@ -10,7 +10,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 
-const port = 80;
+const port = 8080;
 const hostname = '127.0.0.1'
 
 var config = {
