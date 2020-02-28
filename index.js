@@ -256,7 +256,7 @@ function fetchSQLID(callback) {
 
     // TODO Pons query function
     // ! Change this for Pons (where machineType = '2')
-    req.query("SELECT * FROM [dbo].[ProgramInput] WHERE machineType = '1' and id like '200'  ORDER BY  jobComplete DESC , priority DESC, jobDate ASC, [nesting] ASC", (err, recordset) => {
+    req.query("SELECT * FROM [dbo].[Employee] where Status = 'Active' order by First_Name ", (err, recordset) => {
       callback(recordset)
     })
   })

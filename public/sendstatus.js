@@ -186,7 +186,7 @@ $(function () {
     var val = $(this).attr('value');
     $("#diagE").dialog("open");
     $.get("/lineInfo", function (data) {
-      console.table(data[0])
+      console.table(data[0].Employee)
 
     })
 
