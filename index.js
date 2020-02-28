@@ -13,6 +13,8 @@ var path = require('path');
 const port = 8080;
 const hostname = '127.0.0.1'
 
+var testServer = true
+
 var config = {
   user: 'sa',
   password: 'job1!boss',
@@ -22,6 +24,17 @@ var config = {
   parseJSON: 'true',
 };
 
+var testDB = {
+  user:'sa',
+  password: 'johnwalker32',
+  server: '127.0.0.1',
+  database: 'master',
+  parseJson: 'true'
+}
+
+if(testServer == true){
+  config = testDB
+}
 var app = express();
 
 app.set('view engine', 'ejs');
