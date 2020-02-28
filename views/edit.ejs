@@ -24,38 +24,22 @@
         <table class="pure-table pure-table-horizontal mainTable">
                 <thead>
                     <tr>
-                        <th>Nesting</th>
-                        <th>Client</th>
-                        <th>Order</th>
-                        <th>Time (m)</th>
-                        <th>Machine</th>
-                        <th>Status</th>
-                        <th>Order Date*</th>
-                        <th>Program Date</th>
+                        <th>Short</th>
+                        <th>Full Name</th>
+                        <th>Department</th>
+                        <th>Hire Date</th>
+
                     </tr>
                 </thead>
             
                 <tbody id="orderTableSearch" >
                     <% output.forEach(function(table){ %>
                     <tr class = "infoRow" value= "<%= table.id %>">
-                        <td> <%= table.nesting %></td>
-                        <td> <%= table.client %></td>
-                        <td> <%= table.jobOrder %></td>
-                        <td> <%= table.programTime.toFixed(2) %></td>
-                        <td> <%= table.fullMachineName %></td>
-                        <td> <%= table.jobComplete %></td>
-                        <td> </td>
-                        <td>
-                            <% if(table.jobDate != null){ %>
-                                <%= table.jobDate.getDate() + "/" + (table.jobDate.getMonth()+1) + "/" + table.jobDate.getFullYear()  %>
-                            <% } %>
-                        </td>
-                        <td> 
-                            <% if(table.progDate != null){ %>
-                                <%= table.progDate.getDate() + "/" + (table.progDate.getMonth()+1) + "/" + table.progDate.getFullYear()  %>
-                            <% } %>
+                        <td> <%= table.Employee %></td>
+                        <td> <%= table.First_Name %> <%= table.Last_Name %></td>
+                        <td> <%= table.Department %></td>
+                        <td> <%= table.Hire_Date.getDate() + "/" + (table.Hire_Date.getMonth()+1) + "/" + table.Hire_Date.getFullYear() %></td>
 
-                        </td>
                     </tr>
                     <% })%>
                 </tbody>

@@ -32,14 +32,14 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.render('index', {
-    title: 'Order Entry'
-  });
-});
+// app.get('/', (req, res) => {
+//   res.render('index', {
+//     title: 'Order Entry'
+//   });
+// });
 // * Main System Management 
-app.get('/edit', (req, res) => {
-  fetchLaserSQL(data => {
+app.get('/', (req, res) => {
+  employeSQL(data => {
     //console.table(data.recordset)
     res.render('edit', {
       output: data.recordset,
@@ -234,6 +234,20 @@ function fetchLaserSQL(callback) {
     })
   })
 }
+
+// Grab Laser tables
+function employeSQL(callback) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+
+    // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("SELECT * FROM [dbo].[Employee] where Status = 'Active' order by First_Name ", (err, recordset) => {
+      callback(recordset)
+    })
+  })
+}
+
 
 // Grab one row
 function fetchSQLID(callback) {
