@@ -27,7 +27,7 @@ var config = {
 var testDB = {
   user:'sa',
   password: 'johnwalker32',
-  server: '127.0.0.1',
+  server: 'localhost',
   database: 'master',
   parseJson: 'true'
 }
@@ -52,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // });
 // * Main System Management 
 app.get('/', (req, res) => {
+  console.log(config)
   employeSQL(data => {
     //console.table(data.recordset)
     res.render('edit', {
@@ -252,10 +253,11 @@ function fetchLaserSQL(callback) {
 function employeSQL(callback) {
   var connection = new sql.ConnectionPool(config, (err) => {
     var req = new sql.Request(connection)
-
-    // TODO Pons query function
+    // console.log(err)
+    // // TODO Pons query function
     // ! Change this for Pons (where machineType = '2')
     req.query("SELECT * FROM [dbo].[Employee] where Status = 'Active' order by First_Name ", (err, recordset) => {
+      console.log(err)
       callback(recordset)
     })
   })
