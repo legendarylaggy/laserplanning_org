@@ -34,7 +34,7 @@
             
                 <tbody id="orderTableSearch" >
                     <% output.forEach(function(table){ %>
-                    <tr class = "infoRow" value= "<%= table.id %>">
+                    <tr class = "infoRow" id= "<%= table.Employee %>">
                         <td> <%= table.Employee %></td>
                         <td> <%= table.First_Name %> <%= table.Last_Name %></td>
                         <td> <%= table.Department %></td>
@@ -47,7 +47,7 @@
         </div>
 
         <div id="diagE" title="Edit">
-            
+            <div id="divInDialog"> </div>
         </div>
     
 </body>

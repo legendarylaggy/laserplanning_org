@@ -180,13 +180,67 @@ $(function () {
     }
   });
 
+
+
+  $("#diagE").dialog({
+    resizable: false,
+    autoOpen: false,
+    //height:350,
+    modal: true,
+    buttons: {
+      'OK': function() {
+        $(this).dialog('close');
+      },
+     Cancel: function() {
+        $(this).dialog('close');
+     }
+   }
+});
+
   $(".infoRow").on("click", function () {
 
 
-    var val = $(this).attr('value');
-    $("#diagE").dialog("open");
+    var val = $(this).attr('id');
+
+
+    // $("#diagE").dialog({
+    //   open: function(event, ui){
+    //     $('#divInDialog').load('test.html', function() {
+    //       alert('Load was performed.')
+    //     });
+    //   }
+    // });
+
+
+  //   $( "#diagE" ).dialog({
+  //     open: function(event, ui) {
+  //       $('#divInDialog').load('main.css', function() {
+  //         alert('Load was performed.');
+  //       });
+  //     }
+  //  });
+
+  
+      //  $.get("lineInfo", function(data){
+      //       $('#diagE').html(data[22].Employee);
+      //       $('#diagE').dialog('open');
+      //  })
+
+       $.post('employeeData',   // url
+			   { user: val }, // data to be submit
+         function(data, status, jqXHR) {// success callback
+          
+          //$('#diagE').html(data[22].Employee);
+            $('#diagE').dialog('open');
+            $('#divInDialog').text('status: ' + status + ', data: ' + data.output[0].Employee);
+            $('#divInDialog').append("<h2>" + data.output[0].First_Name +" " + data.output[0].Last_Name + "</h2>")
+            console.table(data.output)
+				});
+  
+
     $.get("/lineInfo", function (data) {
       console.table(data[0].Employee)
+      
 
     })
 

@@ -62,6 +62,21 @@ app.get('/', (req, res) => {
   })
 });
 
+app.post('/employeeData', (req, res) => {
+
+  
+  var reqData = {
+    user: req.body.user
+  }
+  console.log(reqData.user)
+  var query = "SELECT * FROM [dbo].[Employee] where Employee ='"+reqData.user+"'order by First_Name " 
+  fetchEmployeeData(query, data => {
+    //console.table(data.data[0])
+    res.send({output: data.recordset })
+  })
+})
+
+
 app.get('/sql', (req, res) => { // ? DEBUG INFO ?
   fetchLaserSQL(data => {
     console.table(data.recordset[0])
@@ -250,6 +265,21 @@ function fetchLaserSQL(callback) {
 }
 
 // Grab Laser tables
+function fetchEmployeeData(query, callback) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+    // console.log(err)
+    // // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+  
+      req.query(query, (err, recordset) => {
+      console.log(err)
+      callback(recordset)
+  })
+    })
+
+}
+
 function employeSQL(callback) {
   var connection = new sql.ConnectionPool(config, (err) => {
     var req = new sql.Request(connection)
