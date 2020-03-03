@@ -13,7 +13,7 @@ var path = require('path');
 const port = 8080;
 const hostname = '127.0.0.1'
 
-var testServer = true
+var testServer = false
 
 var config = {
   user: 'sa',
