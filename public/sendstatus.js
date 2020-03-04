@@ -206,7 +206,6 @@ $(function () {
 });
 
 $("#editPage").dialog({
-  title:"EDIT",
   width:1000,
   resizable: false,
   autoOpen: false,
@@ -272,24 +271,19 @@ $("#editPage").dialog({
            // $('#divInDialog').text('status: ' + status + ', data: ' + data.output2[0].employee);
 
             $('#divInDialog').append("<h2>" + data.output[0].First_Name +" " + data.output[0].Last_Name + "</h2> ")
-            $('#divInDialog').append("<b> General </b>- " + (data.output2[0]?"data available":"no data") + " <button class=\"git\">Edit</button>  <button class=\"button-xsmall pure-button\" "+ (data.output2[0]?"":"disabled") +" >View</button> <br><br>" )
-            $('#divInDialog').append("<b> Kleine Bewerkingen </b>- " + (data.output3[0]?"data":"no data") + " <button class='git'>Edit</button>  <button class=\"button-xsmall pure-button\" "+ (data.output3[0]?"":"disabled") +">View</button> <br><br>")
+            $('#divInDialog').append("<b> General </b>- " + (data.output2[0]?"data available":"no data") + " <button id='general' class=\"git\">Edit</button>  <button class=\"button-xsmall pure-button\" "+ (data.output2[0]?"":"disabled") +" >View</button> <br><br>" )
+            $('#divInDialog').append("<b> Kleine Bewerkingen </b>- " + (data.output3[0]?"data":"no data") + " <button  id='klbew' class='git'>Edit</button>  <button class=\"button-xsmall pure-button\" "+ (data.output3[0]?"":"disabled") +">View</button> <br><br>")
             $('#divInDialog').append("<b> Laser Afdeling </b>- " + (data.output4[0]?"data available":"no data") + " <button class=\"git button-xsmall pure-button\">Edit</button>  <button class=\"button-xsmall pure-button\" "+ (data.output4[0]?"":"disabled") +">View</button> <br><br>")
             $('#divInDialog').append("<b> Plooi Afdeling </b>- " + (data.output5[0]?"data available":"no data") + " <button class=\"git button-xsmall pure-button\">Edit</button>  <button class=\"button-xsmall pure-button\" "+ (data.output5[0]?"":"disabled") +">View</button> <br><br>")
             $('#divInDialog').append("<b> Poeder Afdeling </b>- " + (data.output6[0]?"data available":"no data") + " <button class=\"git button-xsmall pure-button\" >Edit</button>  <button class=\"button-xsmall pure-button\" "+ (data.output6[0]?"":"disabled") +">View</button> <br><br>")
             $('#divInDialog').append("<b> Pons Afdeling </b>- " + (data.output7[0]?"data available":"no data") + " <button class=\"git button-xsmall pure-button\">Edit</button>  <button class=\"button-xsmall pure-button\" "+ (data.output7[0]?"":"disabled") +">View</button> <br><br>")
             
-
             //$('#divInDialog').append("<h3>" + txt + "</h2>")
             //console.log(data.output2[0])
            // console.log(txt)
-
             //console.table(data.output)
         });
-        
-        
-  
-
+ 
     // $.get("/lineInfo", function (data) {
     //   console.table(data[0].Employee)
       
@@ -298,31 +292,20 @@ $("#editPage").dialog({
 
   });
 
-
-var formGeneral = "<form>\
-                  <label for=\"fname\">Brochure:</label><br>\
-                  <input type=\"text\" id=\"fname\" name=\"fname\" value=\"\"><br>\
-                  <label for=\"fname\">Brochure:</label><br>\
-                  <input type=\"text\" id=\"fname\" name=\"fname\" value=\"\"><br>\
-                  <label for=\"fname\">Brochure:</label><br>\
-                  <input type=\"text\" id=\"fname\" name=\"fname\" value=\"\"><br>\
-                  <label for=\"fname\">Brochure:</label><br>\
-                  <input type=\"text\" id=\"fname\" name=\"fname\" value=\"\"><br>\
-                  <label for=\"lname\">Rondleiding:</label><br>\
-                  <input type=\"text\" id=\"lname\" name=\"lname\" value=\"\"><br><br>\
-                  <input type=\"submit\" value=\"Submit\">\
-                  </form>";
-
-
-  $("#divInDialog").on("click",".git", function () {
-
-    
+  $("#divInDialog").on("click","#general", function () {
     $('#editPage').dialog('open');
+    $('#editPage').dialog('option','title', "General");
     var val = $(this).attr('id');
     $('#editForm').load("generalForm.html")
-
-        
   });
+  
+  $("#divInDialog").on("click","#klbew", function () {
+    $('#editPage').dialog('open');
+    $('#editPage').dialog('option','title',"Kleine Bewerkingen");
+    var val = $(this).attr('id');
+    $('#editForm').load("klbewForm.html")
+  });
+  
 
 
 });
