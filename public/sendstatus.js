@@ -211,8 +211,7 @@ $(function () {
       },
       buttons: {
         'OK': function () {
-
-
+          sendInfo();
         },
         Cancel: function () {
           $(this).dialog('close');
@@ -291,7 +290,15 @@ $(function () {
       $('#editPage').dialog('open');
       $('#editPage').dialog('option', 'title', "General");
       var val = $(this).attr('id');
+
+      //First get information then push to form
       $('#editForm').load("generalForm.html")
+      //$('#editForm').load("generalForm.html", {data: employeDetails})
+      $('#generalForm input:not(:checkbox)').attr('disabled', 'disabled');
+
+      $(':checkbox').on('change', function () {
+        $(this).closest('div').prevUntil($(':checkbox').closest('div')).find('input').attr('disabled', !$(this).is(':checked'))
+    });
     });
 
     $("#divInDialog").on("click", "#klbew", function () {
@@ -299,36 +306,42 @@ $(function () {
       $('#editPage').dialog('option', 'title', "Kleine Bewerkingen");
       var val = $(this).attr('id');
       $('#editForm').load("klbewForm.html")
+      
     });
 
 
     function sendInfo() {
 
 
-      $("#generalForm").submit(function (event) {
+      
 
+        var gForm = $('#generalForm').serializeArray();
+        console.table(gForm)
 
         // Get some values from elements on the page:
-        var $form = $(this),
-          term = $form.find("input[name='s']").val(),
-          url = $form.attr("action");
+        // var $form = $(this),
+        //   term = $form.find("input[name='s']").val(),
+        //   url = $form.attr("action");
 
-        // Send the data using post
-        var posting = $.post(url, {
-          s: term
-        });
+        // // Send the data using post
+        // var posting = $.post(url, {
+        //   s: term
+        // });
 
-        // Put the results in a div
-        posting.done(function (data) {
-          var content = $(data).find("#content");
-          $("#result").empty().append(content);
+        // // Put the results in a div
+        // posting.done(function (data) {
+        //   var content = $(data).find("#content");
+        //   $("#result").empty().append(content);
           
-        });
-      });
+        // });
+      
 
     }
 
 
   });
+
+
+
 
 });
