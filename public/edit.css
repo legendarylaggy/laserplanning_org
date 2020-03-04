@@ -17,3 +17,12 @@
 .button-xsmall {
     font-size: 70%;
 }
+#searchArea{
+    text-align: center;
+}
+.infoRow{
+    cursor: pointer;
+}
+#divInDialog{
+    text-align: end;
+}
