@@ -25,14 +25,14 @@ var config = {
 };
 
 var testDB = {
-  user:'sa',
+  user: 'sa',
   password: 'johnwalker32',
   server: 'localhost',
   database: 'master',
   parseJson: 'true'
 }
 
-if(testServer == true){
+if (testServer == true) {
   config = testDB
 }
 var app = express();
@@ -52,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // });
 // * Main System Management 
 app.get('/', (req, res) => {
-  console.log(config)
+  //console.log(config)
   employeSQL(data => {
     //console.table(data.recordset)
     res.render('edit', {
@@ -64,16 +64,69 @@ app.get('/', (req, res) => {
 
 app.post('/employeeData', (req, res) => {
 
-  
   var reqData = {
     user: req.body.user
   }
   console.log(reqData.user)
-  var query = "SELECT * FROM [dbo].[Employee] where Employee ='"+reqData.user+"'order by First_Name " 
-  fetchEmployeeData(query, data => {
-    //console.table(data.data[0])
-    res.send({output: data.recordset })
-  })
+  var query = "SELECT * FROM [dbo].[Employee] where Employee ='" + reqData.user + "' order by Employee";
+  var getGeneral = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "' order by Employee";
+  var getKleinebew = "select * from [dbo].[Skills_Kleinebew] where Employee ='" + reqData.user + "'";
+  var getLaserAfd = "select * from [dbo].[Skills_laserafdeling] where Employee ='" + reqData.user + "'";
+  var getPlooiAfd = "select * from [dbo].[Skills_plooiafdeling] where Employee ='" + reqData.user + "'";
+  var getPoederAfd = "select * from [dbo].[Skills_poederlakken] where Employee ='" + reqData.user + "'";
+  var getPonsAfd = "select * from [dbo].[Skills_ponsafdeling] where Employee ='" + reqData.user + "'";
+  
+  
+  (async function (){
+    try {
+        pool = await sql.connect(config);
+        const res1 = await pool.request().query(query);
+        //processQryA(res1);
+        if(res1 != null){
+          console.table(res1.recordset)
+        }
+        const res2 = await pool.request().query(getGeneral);
+        const res3 = await pool.request().query(getKleinebew);
+        const res4 = await pool.request().query(getLaserAfd);
+        const res5 = await pool.request().query(getPlooiAfd);
+        const res6 = await pool.request().query(getPoederAfd);
+        const res7 = await pool.request().query(getPonsAfd);
+       // processQryB(res2);
+       if(res7 != null){
+        console.table(res2.recordset)
+        res.send({
+          output:res1.recordset,
+          output2:res2.recordset,
+          output3:res3.recordset,
+          output4:res4.recordset,
+          output5:res5.recordset,
+          output6:res6.recordset,
+          output7:res7.recordset
+        })
+        sql.close()
+      }
+        //const res3 = await pool.request().query(getKleinebew);
+       // processQryC(res3);
+        //const res4 = await pool.request().query(getLaserAfd);
+       // processQryD(res4);
+        /*..And so on with rest of sequential queries*/
+        /*Any of them resulting in error will be caught in (catch)*/
+
+    } catch (error) {
+        console.error("Error in start()::", error);
+        sql.close()
+    }
+})()
+
+
+  
+  
+  // fetchEmployeeData(query,getGeneral, data => {
+  //   //console.table(data.data[0])
+  //   res.send({
+  //     output: data.recordset
+  //   })
+  // })
 })
 
 
@@ -140,7 +193,7 @@ app.post('/editInfo', (req, res) => {
 
   if (check == 0) { // NESTING
     value++
-    if (value > 2){
+    if (value > 2) {
       value = 0;
     }
     valueComp = value
@@ -218,13 +271,13 @@ app.post('/submitInfo', (req, res) => {
         fetchSQLq(connection, query, data => {
 
           //console.log(data.recordset[0].value)
-          if (typeof data != 'undefined' && data.recordset[0] != undefined ) { // * DEB-1 check if sql returned value otherwise give current date 
-            console.log("order: "+ fetch)
+          if (typeof data != 'undefined' && data.recordset[0] != undefined) { // * DEB-1 check if sql returned value otherwise give current date 
+            console.log("order: " + fetch)
             if (outputDate > data.recordset[0].value) {
               outputDate = data.recordset[0].value
               reqData.orderDate = outputDate
             }
-          } else{
+          } else {
             reqData.orderDate = new Date;
             console.log("Error at DEB-1")
             console.log(fetch)
@@ -264,19 +317,19 @@ function fetchLaserSQL(callback) {
   })
 }
 
-// Grab Laser tables
-function fetchEmployeeData(query, callback) {
+
+function fetchEmployeeData(query,newQ,callback) {
   var connection = new sql.ConnectionPool(config, (err) => {
     var req = new sql.Request(connection)
     // console.log(err)
-    // // TODO Pons query function
-    // ! Change this for Pons (where machineType = '2')
-  
-      req.query(query, (err, recordset) => {
-      console.log(err)
+    req.query(query, (err, recordset) => {
+      //console.log(err)
       callback(recordset)
-  })
     })
+    req.query(newQ, (err, recordset) => {
+      callback(recordset)
+    })
+  })
 
 }
 
@@ -287,7 +340,7 @@ function employeSQL(callback) {
     // // TODO Pons query function
     // ! Change this for Pons (where machineType = '2')
     req.query("SELECT * FROM [dbo].[Employee] where Status = 'Active' order by First_Name ", (err, recordset) => {
-      console.log(err)
+      //console.log(err)
       callback(recordset)
     })
   })
@@ -318,7 +371,7 @@ function fetchPonsSQL(callback) {
       callback(recordset)
     })
   })
-} 
+}
 
 //Grab selected tables + pass open connection
 function fetchSQLq(connection, query, callback) {
