@@ -62,6 +62,18 @@ app.get('/', (req, res) => {
   })
 });
 
+app.post('/postInfo', (req,res) => {
+  var inData = {
+    gen1: req.body.gen1,
+    gen2: req.body.gen2
+  }
+  console.log(inData.gen1)
+  console.log(inData.gen2)
+  console.log(typeof inData.gen1)
+  console.log(typeof inData.gen2)
+  res.send('Done')
+})
+
 app.post('/employeeData', (req, res) => {
 
   var reqData = {
@@ -83,7 +95,7 @@ app.post('/employeeData', (req, res) => {
         const res1 = await pool.request().query(query);
         //processQryA(res1);
         if(res1 != null){
-          console.table(res1.recordset)
+         // console.table(res1.recordset)
         }
         const res2 = await pool.request().query(getGeneral);
         const res3 = await pool.request().query(getKleinebew);
@@ -93,7 +105,7 @@ app.post('/employeeData', (req, res) => {
         const res7 = await pool.request().query(getPonsAfd);
        // processQryB(res2);
        if(res7 != null){
-        console.table(res2.recordset)
+       // console.table(res2.recordset)
         res.send({
           output:res1.recordset,
           output2:res2.recordset,

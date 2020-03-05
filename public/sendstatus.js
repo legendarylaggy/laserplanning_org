@@ -301,6 +301,9 @@ $(function () {
     });
     });
 
+
+
+    
     $("#divInDialog").on("click", "#klbew", function () {
       $('#editPage').dialog('open');
       $('#editPage').dialog('option', 'title', "Kleine Bewerkingen");
@@ -316,24 +319,31 @@ $(function () {
       
 
         var gForm = $('#generalForm').serializeArray();
-        console.table(gForm)
-
+        //console.table(gForm)
+        console.log(gForm)
         // Get some values from elements on the page:
         // var $form = $(this),
         //   term = $form.find("input[name='s']").val(),
         //   url = $form.attr("action");
 
         // // Send the data using post
-        // var posting = $.post(url, {
-        //   s: term
-        // });
+        // var dat = []
+        // gForm.forEach(element , i  => {
 
-        // // Put the results in a div
-        // posting.done(function (data) {
-        //   var content = $(data).find("#content");
-        //   $("#result").empty().append(content);
+        //   dat[i] = gForm
           
         // });
+         var posting = $.post('postInfo', {
+           gen1: gForm[0].name,
+           gen2: gForm[0].value
+         });
+
+        // // Put the results in a div
+         posting.done(function (data) {
+          var content = $(data).find("#content");
+          // $("#result").empty().append(content);
+          console.log("saved!")
+        });
       
 
     }
