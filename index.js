@@ -69,8 +69,6 @@ app.post('/postInfo', (req,res) => {
   }
   console.log(inData.gen1)
   console.log(inData.gen2)
-  console.log(typeof inData.gen1)
-  console.log(typeof inData.gen2)
   res.send('Done')
 })
 
