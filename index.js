@@ -69,6 +69,7 @@ app.post('/postInfo', (req,res) => {
   }
   console.log(inData.gen1)
   console.log(inData.gen2)
+  
   res.send('Done')
 })
 
