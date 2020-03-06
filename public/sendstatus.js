@@ -1,3 +1,5 @@
+//const e = require("express");
+
 $(function () {
   // submit form to server
 
@@ -211,7 +213,12 @@ $(function () {
       },
       buttons: {
         'OK': function () {
+          //if(checkStringLength)){
           sendInfo();
+          // }
+          //  else{
+          //  alert("verantw - max 5 characters / opmerking - max 250 characters ")
+          // }
         },
         Cancel: function () {
           $(this).dialog('close');
@@ -264,7 +271,7 @@ $(function () {
 
           // $('#divInDialog').text('status: ' + status + ', data: ' + data.output2[0].employee);
 
-          $('#divInDialog').append("<h2>" + data.output[0].First_Name + " " + data.output[0].Last_Name + "</h2> ")
+          $('#divInDialog').append("<h2>" + data.output[0].First_Name + " " + data.output[0].Last_Name + " - " + data.output[0].Employee + "</h2> ")
           $('#divInDialog').append("<b> General </b>- " + (data.output2[0] ? "data available" : "no data") + " <button id='general' class=\"git button-xsmall pure-button\">Edit</button>  <button class=\"button-xsmall pure-button\" " + (data.output2[0] ? "" : "disabled") + " >View</button> <br><br>")
           $('#divInDialog').append("<b> Kleine Bewerkingen </b>- " + (data.output3[0] ? "data" : "no data") + " <button  id='klbew' class='git button-xsmall pure-button'>Edit</button>  <button class=\"button-xsmall pure-button\" " + (data.output3[0] ? "" : "disabled") + ">View</button> <br><br>")
           $('#divInDialog').append("<b> Laser Afdeling </b>- " + (data.output4[0] ? "data available" : "no data") + " <button class=\"git button-xsmall pure-button\">Edit</button>  <button class=\"button-xsmall pure-button\" " + (data.output4[0] ? "" : "disabled") + ">View</button> <br><br>")
@@ -298,58 +305,69 @@ $(function () {
 
       $(':checkbox').on('change', function () {
         $(this).closest('div').prevUntil($(':checkbox').closest('div')).find('input').attr('disabled', !$(this).is(':checked'))
+      });
     });
-    });
 
 
 
-    
+
     $("#divInDialog").on("click", "#klbew", function () {
       $('#editPage').dialog('open');
       $('#editPage').dialog('option', 'title', "Kleine Bewerkingen");
       var val = $(this).attr('id');
       $('#editForm').load("klbewForm.html")
-      
+
     });
 
 
     function sendInfo() {
 
 
-      
 
-        var gForm = $('#generalForm').serializeArray();
-        //console.table(gForm)
-        console.log(gForm)
-        // Get some values from elements on the page:
-        // var $form = $(this),
-        //   term = $form.find("input[name='s']").val(),
-        //   url = $form.attr("action");
 
-        // // Send the data using post
-        // var dat = []
-        // gForm.forEach(element , i  => {
+      var gForm = $('#generalForm').serializeArray();
+      //console.table(gForm)
+      console.log(gForm)
+      // Get some values from elements on the page:
+      // var $form = $(this),
+      //   term = $form.find("input[name='s']").val(),
+      //   url = $form.attr("action");
 
-        //   dat[i] = gForm
-          
-        // });
-         var posting = $.post('postInfo', {
-           gen1: gForm[0].name,
-           gen2: gForm[0].value
-         });
+      // // Send the data using post
 
-        // // Put the results in a div
-         posting.done(function (data) {
-          var content = $(data).find("#content");
-          // $("#result").empty().append(content);
-          console.log("saved!")
-        });
-      
+
+      gForm.forEach((element, i) => {
+        if (element.name == 'boxCheck' && element.value == 'on') {
+
+          console.log("entries found!")
+          console.log(gForm[i + 1].name + " " + gForm[i + 1].value)
+          console.log(gForm[i + 2].name + " " + gForm[i + 2].value)
+
+          $.post('postInfo', {
+            id: gForm[i + 1].name,
+            verantw: gForm[i + 1].value,
+            opmerking: gForm[i + 2].value
+          }).done(function (data) {
+            var content = $(data).find("#content");
+            // $("#result").empty().append(content);
+            console.log("saved!")
+          });
+        }
+      });
+
+      // // Put the results in a div
+      //  posting.done(function (data) {
+      //   var content = $(data).find("#content");
+      //   // $("#result").empty().append(content);
+      //   console.log("saved!")
+      // });
+
 
     }
 
 
   });
+
 
 
 

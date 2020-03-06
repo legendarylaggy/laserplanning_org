@@ -32,6 +32,8 @@ var testDB = {
   parseJson: 'true'
 }
 
+var lastUser = ''
+
 if (testServer == true) {
   config = testDB
 }
@@ -64,12 +66,27 @@ app.get('/', (req, res) => {
 
 app.post('/postInfo', (req,res) => {
   var inData = {
-    gen1: req.body.gen1,
-    gen2: req.body.gen2
+    gen1: req.body.id,
+    gen2: req.body.verantw,
+    gen3: req.body.opmerking
   }
-  console.log(inData.gen1)
+  var gen = inData.gen1.split('.')
+  console.log(lastUser)
+  console.log(gen[0] + " " + gen[1])
   console.log(inData.gen2)
+  console.log(inData.gen3)
+
+  //var updateQuery = ""
+  checkStatus(lastUser,gen[0],gen[1],data =>{
+    if(data > 0){
+      updateSQLValues(lastUser,gen[0],gen[1],inData.gen2,inData.gen3)
+    }
+    else{
+      createNewSQLValues(lastUser,gen[0],gen[1],inData.gen2,inData.gen3)
+    }
+  })
   
+
   res.send('Done')
 })
 
@@ -78,7 +95,7 @@ app.post('/employeeData', (req, res) => {
   var reqData = {
     user: req.body.user
   }
-  console.log(reqData.user)
+  lastUser = reqData.user
   var query = "SELECT * FROM [dbo].[Employee] where Employee ='" + reqData.user + "' order by Employee";
   var getGeneral = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "' order by Employee";
   var getKleinebew = "select * from [dbo].[Skills_Kleinebew] where Employee ='" + reqData.user + "'";
@@ -369,6 +386,43 @@ function fetchSQLID(callback) {
       callback(recordset)
     })
   })
+}
+
+
+function checkStatus(employee,hfdnr,itemnr,callback) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+
+    // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("Select count(*) as rowAmount from skills_algemeen where employee = '" + employee +"' and hfdnr =" + hfdnr +" and itemnr =" + itemnr, (err, recordset) => {
+      callback(recordset.recordset[0].rowAmount)
+    })
+  })
+}
+function updateSQLValues(employee,hfdnr,itemnr,verantw,opmerking) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+
+    // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("update skills_algemeen set ok = 1, verantw ='"+ verantw +"', opmerking = '"+ opmerking +"', signed = 1, tijdupdate = GETDATE() where employee = '" + employee +"' and hfdnr =" + hfdnr +" and itemnr =" + itemnr, (err, recordset) => {
+      console.log(recordset.rowsAffected)
+    })
+  })
+}
+function createNewSQLValues(emp,hfdnr,itemnr,verantw,opmerking){
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+
+    // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("insert into skills_algemeen (employee,hfdnr, itemnr, ok, verantw, opmerking, signed, tijdupdate) Values('"+emp+"',"+hfdnr+","+itemnr+",1,'"+verantw+"','"+opmerking+"', 1, GETDATE())", (err, recordset) => {
+      console.log(err)
+      console.log(recordset)
+    })
+  })
+  
 }
 
 // Grab Laser tables
