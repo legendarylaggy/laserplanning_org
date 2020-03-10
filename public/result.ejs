@@ -7,6 +7,16 @@
     <% data.forEach(function (d) {%>
     <% if(title == "ALGEMEEN"){ %> 
         <% if(d.documentnaam !== "ALGEMEEN") {return false} %>
+    <% } else if(title == "KLEINE BEWERKINGEN"){ %>
+        <% if(d.documentnaam !== "KLEINE BEWERKINGEN") {return false} %>
+    <% } else if(title == "LASERAFDELING"){ %>
+        <% if(d.documentnaam !== "LASERAFDELING") {return false} %>
+    <% } else if(title == "PONSAFDELING"){ %>
+        <% if(d.documentnaam !== "PONSAFDELING") {return false} %>
+    <% } else if(title == "PLOOIAFDELING"){ %>
+        <% if(d.documentnaam !== "PLOOIAFDELING") {return false} %>
+    <% } else if(title == "POEDERLAKKEN"){ %>
+        <% if(d.documentnaam !== "POEDERLAKKEN") {return false} %>
     <% } %>
        
         <!-- Brochure -->
@@ -23,3 +33,17 @@
         
         <% }); %>
 </form>
+
+<!-- 
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>   
+    <% eData.forEach(function (d) { %>
+    <tr>
+        <td><%- d.hfdnr %></td>
+        <td><%- d.itemnr %></td>
+    </tr>
+    <% }); %>
+</table> -->

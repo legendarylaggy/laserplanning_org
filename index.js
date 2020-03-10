@@ -67,14 +67,54 @@ app.get('/', (req, res) => {
 //Push sql template and data
 app.post('/data', function (req, res) {
   var input = "null"
+  var employee = ""
   input = req.body.user;
-  skillTemplateSQL(data=> {
-    res.send({ 
-      data: data,
-      title: input });
-  })
+  employee = req.body.username
+  // skillTemplateSQL(data=> {
+  //   res.send({ 
+  //     data: data,
+  //     title: input });
+  // })
+  var query = "SELECT * FROM [dbo].[Skillsmatrix_template] order by hfdnr, itemnr"
+  var dataE = "SELECT * FROM [dbo].[Skills_algemeen] where Employee ='" + employee +"'order by hfdnr, itemnr";
+
+  (async function (){
+    try {
+        pool = await sql.connect(config);
+        const res1 = await pool.request().query(query);
+        //processQryA(res1);
+        if(res1 != null){
+         // console.table(res1.recordset)
+        }
+        const res2 = await pool.request().query(dataE);
+
+       // processQryB(res2);
+       if(res2 != null){
+       // console.table(res2.recordset)
+        res.send({
+          title:input,
+          data:res1.recordset,
+          eData:res2.recordset,
+
+        })
+        sql.close()
+      }
+        //const res3 = await pool.request().query(getKleinebew);
+       // processQryC(res3);
+        //const res4 = await pool.request().query(getLaserAfd);
+       // processQryD(res4);
+        /*..And so on with rest of sequential queries*/
+        /*Any of them resulting in error will be caught in (catch)*/
+
+    } catch (error) {
+        console.error("Error in start()::", error);
+        sql.close()
+    }
+})()
   console.log(input)
 });
+
+
 
 app.post('/postInfo', (req,res) => {
   var inData = {
@@ -109,12 +149,12 @@ app.post('/employeeData', (req, res) => {
   }
   lastUser = reqData.user
   var query = "SELECT * FROM [dbo].[Employee] where Employee ='" + reqData.user + "' order by Employee";
-  var getGeneral = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "' order by Employee";
-  var getKleinebew = "select * from [dbo].[Skills_Kleinebew] where Employee ='" + reqData.user + "'";
-  var getLaserAfd = "select * from [dbo].[Skills_laserafdeling] where Employee ='" + reqData.user + "'";
-  var getPlooiAfd = "select * from [dbo].[Skills_plooiafdeling] where Employee ='" + reqData.user + "'";
-  var getPoederAfd = "select * from [dbo].[Skills_poederlakken] where Employee ='" + reqData.user + "'";
-  var getPonsAfd = "select * from [dbo].[Skills_ponsafdeling] where Employee ='" + reqData.user + "'";
+  var getGeneral = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "' and hfdnr = '2'";
+  var getKleinebew = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '17' ";
+  var getLaserAfd = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '5' ";
+  var getPlooiAfd = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '11' ";
+  var getPoederAfd = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '14' ";
+  var getPonsAfd = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '8' ";
   
   
   (async function (){
