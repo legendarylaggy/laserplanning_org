@@ -64,6 +64,18 @@ app.get('/', (req, res) => {
   })
 });
 
+//Push sql template and data
+app.post('/data', function (req, res) {
+  var input = "null"
+  input = req.body.user;
+  skillTemplateSQL(data=> {
+    res.send({ 
+      data: data,
+      title: input });
+  })
+  console.log(input)
+});
+
 app.post('/postInfo', (req,res) => {
   var inData = {
     gen1: req.body.id,
@@ -370,6 +382,19 @@ function employeSQL(callback) {
     req.query("SELECT * FROM [dbo].[Employee] where Status = 'Active' order by First_Name ", (err, recordset) => {
       //console.log(err)
       callback(recordset)
+    })
+  })
+}
+
+function skillTemplateSQL(callback) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+    // console.log(err)
+    // // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("SELECT * FROM [dbo].[Skillsmatrix_template] order by hfdnr, itemnr", (err, recordset) => {
+      //console.log(err)
+      callback(recordset.recordset)
     })
   })
 }

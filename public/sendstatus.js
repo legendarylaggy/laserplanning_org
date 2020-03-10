@@ -297,15 +297,13 @@ $(function () {
       $('#editPage').dialog('open');
       $('#editPage').dialog('option', 'title', "General");
       var val = $(this).attr('id');
-
+      getData("ALGEMEEN")
       //First get information then push to form
-      $('#editForm').load("generalForm.html")
+      //$('#editForm').load("generalForm.html")
       //$('#editForm').load("generalForm.html", {data: employeDetails})
       $('#generalForm input:not(:checkbox)').attr('disabled', 'disabled');
 
-      $(':checkbox').on('change', function () {
-        $(this).closest('div').prevUntil($(':checkbox').closest('div')).find('input').attr('disabled', !$(this).is(':checked'))
-      });
+  
     });
 
 
@@ -367,6 +365,37 @@ $(function () {
 
 
   });
+
+  function getData(val) {
+    // Grab the template
+    $.get('/result.ejs', function (template) {
+        // Compile the EJS template.
+        var func = ejs.compile(template);
+
+        // Grab the data
+
+        $.post('data', // url
+        {
+          user: val
+        }, // data to be submit
+        function (data, status, jqXHR) { // success callback
+
+          var html = func(data);
+           $('#divResults').html(html);
+
+        });
+
+
+
+        // $.get('/data', function (data) {
+
+         
+        //    // Generate the html from the given data.
+        //    var html = func(data);
+        //    $('#divResults').html(html);
+        // });
+    });
+}
 
 
 

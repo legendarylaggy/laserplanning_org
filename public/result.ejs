@@ -1,0 +1,25 @@
+<head>
+    <script src="effects.js"></script>
+    <link rel="stylesheet" href="other.css">
+</head>
+
+<form id="generalForm">
+    <% data.forEach(function (d) {%>
+    <% if(title == "ALGEMEEN"){ %> 
+        <% if(d.documentnaam !== "ALGEMEEN") {return false} %>
+    <% } %>
+       
+        <!-- Brochure -->
+        <div class="layer">
+            <label for="boxCheck"><b><%- d.omschrijving %></b></label>
+            <input type="checkbox"  name="boxCheck">
+            <label> Verantw:</label>
+            <input type="text" class='entry' name="<%- d.hfdnr %>.<%- d.itemnr %>" value="">
+            <label> Opmerking:</label>
+            <input type="text" name="<%- d.hfdnr %>.<%- d.itemnr %>" value="">
+            <br>
+            <br>
+        </div>
+        
+        <% }); %>
+</form>
