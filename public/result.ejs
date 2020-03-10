@@ -18,20 +18,20 @@
     <% } else if(title == "POEDERLAKKEN"){ %>
         <% if(d.documentnaam !== "POEDERLAKKEN") {return false} %>
     <% } %>
-       
-        <!-- Brochure -->
+
         <div class="layer">
+            <%- title %>
             <label for="boxCheck"><b><%- d.omschrijving %></b></label>
-            <input type="checkbox"  name="boxCheck">
+            <input type="checkbox"  name="boxCheck"<% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>checked<% } %> <% }); %> >
             <label> Verantw:</label>
-            <input type="text" class='entry' name="<%- d.hfdnr %>.<%- d.itemnr %>" value="">
+            <input type="text" class='entry' name="<%- d.hfdnr %>.<%- d.itemnr %>" <% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %> value="<%- c.verantw %>" <% } %> <% }); %> >
             <label> Opmerking:</label>
-            <input type="text" name="<%- d.hfdnr %>.<%- d.itemnr %>" value="">
+            <input type="text" name="<%- d.hfdnr %>.<%- d.itemnr %>"<% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %> value="<%- c.opmerking %>" <% } %> <% }); %> >
             <br>
             <br>
         </div>
         
-        <% }); %>
+    <% }); %>
 </form>
 
 <!-- 
