@@ -6,28 +6,39 @@ td {
 body {
     font: 12pt Georgia, "Times New Roman", Times, serif;
     line-height: 1.3;
-    width: 900px;
-    }
-#mainTable{
-    margin: 0 auto;
     
 }
-#headTable{
+
+#mainTable {
+    margin: 0 auto;
+
+}
+
+#headTable {
     text-align: center;
     width: 880px;
     margin: 0 auto;
-    color:black;
+    color: black;
     border: 2px solid black;
 }
 
-#headTable th{
+#headTable th {
     text-align: center;
     background-color: white;
     border: 1px solid rgb(168, 168, 168);
 }
-#maintable th{
+
+#maintable th {
     background-color: bisque;
 }
+
 @page {
     margin: 0.5cm;
-    }
+}
+#slabImg{
+    margin-bottom: 15px;
+}
+#content{
+    width: 950px;
+    margin: 0 auto;
+}

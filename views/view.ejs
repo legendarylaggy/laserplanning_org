@@ -3,21 +3,34 @@
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css"
         integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
 </Head>
+<script>
+    var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+
+today = mm + '/' + dd + '/' + yyyy;
+</script>
 
 <body>
-
+<div id="content">
     <table id="headTable" class="pure-table pure-table-bordered">
         <thead>
             <tr>
-                <th rowspan="3">Slabinck</th>
-                <th rowspan="3">
+                <th rowspan="3"><img id="slabImg" width="220px" src="logo-slabinck.png" alt=""></th>
+                <th rowspan="3" >
                     Opvolgingsformulier<br>
                     Introductie Werknemer<br>
                     <%- title %>
                 </th>
                 
                 <th>
-                    KLEB
+                    <% if(title == "ALGEMEEN"){%> HR_RF_04 <%} %>
+                    <% if(title == "KLEINE BEWERKINGEN"){%> HR_RF_14 <%} %>
+                    <% if(title == "LASERAFDELING"){%> HR_RF_10 <%} %>
+                    <% if(title == "PONSAFDELING"){%> HR_RF_11 <%} %>
+                    <% if(title == "PLOOIAFDELING"){%> HR_RF_12 <%} %>
+                    <% if(title == "POEDERLAKKEN"){%> HR_RF_13 <%} %>
                 </th>
                 <th>
                     Versie: 01
@@ -30,13 +43,13 @@
                     Pagina 1 van 1
                 </th>
                 <th>
-                    datetoday()
+                    <script>document.write(today);</script>
                 </th>
 
             </tr>
             <tr>
                 <th colspan="2">
-                    Opgesteld door:
+                    Opgesteld door: Kimberly Loose
                 </th>
 
             </tr>
@@ -70,11 +83,7 @@
             de
             praktische kennis heeft om zijn taak uit te voeren.
         </p>
-        <li>
-            <p>
-                ONTHAAL :
-            </p>
-        </li>
+        
     </ol>
     <% } %>
     <!-- <% if(title == "KLEINE BEWERKINGEN"){ %> 
@@ -96,6 +105,7 @@
                 <th>VERANTW.</th>
                 <th>OPMERKINGEN</th>
                 <th>PAR.</th>
+                <th>DATUM</th>
             </tr>
         </thead>
         <tbody>
@@ -116,15 +126,18 @@
 
             <tr>
                 <td><% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>
-                    <%- c.ok %><% } %> <% }); %> </td>
+                     OK <% } %> <% }); %> </td>
                 <td><%- d.omschrijving %></td>
                 <td><% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>
                     <%- c.verantw %><% } %> <% }); %> </td>
                 <td><% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>
                     <%- c.opmerking %><% } %> <% }); %> </td>
                 <td> </td>
+                <td> </td>
+
             </tr>
             <% }); %>
         </tbody>
     </table>
+</div>
 </body>
