@@ -20,7 +20,6 @@
     <% } %>
 
         <div class="layer">
-            <%- title %>
             <label for="boxCheck"><b><%- d.omschrijving %></b></label>
             <input type="checkbox"  name="boxCheck"<% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>checked<% } %> <% }); %> >
             <label> Verantw:</label>
