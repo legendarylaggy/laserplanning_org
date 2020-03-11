@@ -1,16 +1,16 @@
 $( document ).ready(function() {
   
-    if($('#generalForm input[type="checkbox"]').prop('checked')){
-    }
-    else{
-  $('#generalForm input:not(:checkbox)').attr('disabled', 'disabled');
+  //   if($('#generalForm input[type="checkbox"]').prop('checked')){
+  //   }
+  //   else{
+  // $('#generalForm input:not(:checkbox)').attr('disabled', 'disabled');
 
-  $(':checkbox').on('change', function () {
-    $(this).first().nextAll().attr('disabled', !$(this).is(':checked'))
-    //.closest('div').prevUntil($(':checkbox').closest('div')).find('input').attr('disabled', !$(this).is(':checked'))
-  });
+  // $(':checkbox').on('change', function () {
+  //   $(this).first().nextAll().attr('disabled', !$(this).is(':checked'))
+  //   //.closest('div').prevUntil($(':checkbox').closest('div')).find('input').attr('disabled', !$(this).is(':checked'))
+  // });
 
-    }
+  //   }
   
 
 
