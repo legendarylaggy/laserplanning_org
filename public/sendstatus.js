@@ -214,11 +214,12 @@ $(function () {
       buttons: {
         'OK': function () {
           //if(checkStringLength)){
-          sendInfo();
+          sendInfo()
           // }
           //  else{
           //  alert("verantw - max 5 characters / opmerking - max 250 characters ")
           // }
+          $(this).dialog('close');
         },
         Cancel: function () {
           $(this).dialog('close');
@@ -273,13 +274,12 @@ $(function () {
           // $('#divInDialog').text('status: ' + status + ', data: ' + data.output2[0].employee);
 
           $('#divInDialog').append("<h2>" + data.output[0].First_Name + " " + data.output[0].Last_Name + " - " + data.output[0].Employee + "</h2> ")
-          $('#divInDialog').append("<b> General </b>- " + (data.output2[0] ? "data available" : "no data") + " <button id='general' class=\"git button-xsmall pure-button\">Edit</button>  <button class=\"button-xsmall pure-button\" " + (data.output2[0] ? "" : "disabled") + " >View</button> <br><br>")
-          $('#divInDialog').append("<b> Kleine Bewerkingen </b>- " + (data.output3[0] ? "data available" : "no data") + " <button  id='klbew' class='git button-xsmall pure-button'>Edit</button>  <button class=\"button-xsmall pure-button\" " + (data.output3[0] ? "" : "disabled") + ">View</button> <br><br>")
-          $('#divInDialog').append("<b> Laser Afdeling </b>- " + (data.output4[0] ? "data available" : "no data") + " <button id='laser' class=\"git button-xsmall pure-button\">Edit</button>  <button class=\"button-xsmall pure-button\" " + (data.output4[0] ? "" : "disabled") + ">View</button> <br><br>")
-          $('#divInDialog').append("<b> Plooi Afdeling </b>- " + (data.output5[0] ? "data available" : "no data") + " <button id='plooi' class=\"git button-xsmall pure-button\">Edit</button>  <button class=\"button-xsmall pure-button\" " + (data.output5[0] ? "" : "disabled") + ">View</button> <br><br>")
-          $('#divInDialog').append("<b> Poeder Afdeling </b>- " + (data.output6[0] ? "data available" : "no data") + " <button id='poeder' class=\"git button-xsmall pure-button\" >Edit</button>  <button class=\"button-xsmall pure-button\" " + (data.output6[0] ? "" : "disabled") + ">View</button> <br><br>")
-          $('#divInDialog').append("<b> Pons Afdeling </b>- " + (data.output7[0] ? "data available" : "no data") + " <button id='pons' class=\"git button-xsmall pure-button\">Edit</button>  <button class=\"button-xsmall pure-button\" " + (data.output7[0] ? "" : "disabled") + ">View</button> <br><br>")
-
+          $('#divInDialog').append("<b> General </b>- " + (data.output2[0].dig ? "data available" : "no data") + " <button id='general' class=\"git button-xsmall pure-button\">Edit</button>  <button id='generalview' class=\"button-xsmall pure-button\" " + (data.output2[0].dig ? "" : "disabled") + " >View</button> <br><br>")
+          $('#divInDialog').append("<b> Kleine Bewerkingen </b>- " + (data.output3[0].dig ? "data available" : "no data") + " <button id='klbew' class='git button-xsmall pure-button'>Edit</button>  <button id='klbewview' class=\"button-xsmall pure-button\" " + (data.output3[0].dig ? "" : "disabled") + ">View</button> <br><br>")
+          $('#divInDialog').append("<b> Laser Afdeling </b>- " + (data.output4[0].dig ? "data available" : "no data") + " <button id='laser' class=\"git button-xsmall pure-button\">Edit</button>  <button id='laserview' class=\"button-xsmall pure-button\" " + (data.output4[0].dig ? "" : "disabled") + ">View</button> <br><br>")
+          $('#divInDialog').append("<b> Plooi Afdeling </b>- " + (data.output5[0].dig ? "data available" : "no data") + " <button id='plooi' class=\"git button-xsmall pure-button\">Edit</button>  <button id='plooiview' class=\"button-xsmall pure-button\" " + (data.output5[0].dig ? "" : "disabled") + ">View</button> <br><br>")
+          $('#divInDialog').append("<b> Poeder Afdeling </b>- " + (data.output6[0].dig ? "data available" : "no data") + " <button id='poeder' class=\"git button-xsmall pure-button\" >Edit</button>  <button id='poederview' class=\"button-xsmall pure-button\" " + (data.output6[0].dig ? "" : "disabled") + ">View</button> <br><br>")
+          $('#divInDialog').append( "<b> Pons Afdeling </b>- " + (data.output7[0].dig ? "data available" : "no data") + " <button id='pons' class=\"git button-xsmall pure-button\">Edit</button>  <button id='ponsview' class=\"button-xsmall pure-button\" " + (data.output7[0].dig ? "" : "disabled") + ">View</button> <br><br>")
           //$('#divInDialog').append("<h3>" + txt + "</h2>")
           //console.log(data.output2[0])
           // console.log(txt)
@@ -300,10 +300,35 @@ $(function () {
       getData("ALGEMEEN",val)
     });
 
+    $("#divInDialog").on("click", "#generalview", function () {
+      //var newWindow = window.open('/view');
+
+      // Access it using its variable
+      //newWindow.my_special_setting = "Hello World";
+
+      grabView("ALGEMEEN",val)
+    });
+
+    $("#divInDialog").on("click", "#klbewview", function () {
+      grabView("KLEINE BEWERKINGEN",val)
+    });
+    $("#divInDialog").on("click", "#laserview", function () {
+      grabView("LASERAFDELING",val)
+    });
+    $("#divInDialog").on("click", "#ponsview", function () {
+      grabView("PONSAFDELING",val)
+    });
+    $("#divInDialog").on("click", "#plooiview", function () {
+      grabView("PLOOIAFDELING",val)
+    });
+    $("#divInDialog").on("click", "#poederview", function () {
+      grabView("POEDERLAKKEN",val)
+    });
+
     $("#divInDialog").on("click", "#klbew", function () {
       $('#editPage').dialog('open');
       $('#editPage').dialog('option', 'title', "KLEINE BEWERKINGEN");
-      var val = $(this).attr('id');
+      
       //$('#editForm').load("klbewForm.html")
       getData("KLEINE BEWERKINGEN",val)
     });
@@ -311,7 +336,7 @@ $(function () {
     $("#divInDialog").on("click", "#laser", function () {
       $('#editPage').dialog('open');
       $('#editPage').dialog('option', 'title', "LASERAFDELING");
-      var val = $(this).attr('id');
+      
       //$('#editForm').load("klbewForm.html")
       getData("LASERAFDELING",val)
     });
@@ -319,7 +344,7 @@ $(function () {
     $("#divInDialog").on("click", "#pons", function () {
       $('#editPage').dialog('open');
       $('#editPage').dialog('option', 'title', "PONSAFDELING");
-      var val = $(this).attr('id');
+      
       //$('#editForm').load("klbewForm.html")
       getData("PONSAFDELING",val)
     });
@@ -327,24 +352,24 @@ $(function () {
     $("#divInDialog").on("click", "#plooi", function () {
       $('#editPage').dialog('open');
       $('#editPage').dialog('option', 'title', "PLOOIAFDELING");
-      var val = $(this).attr('id');
+      
       //$('#editForm').load("klbewForm.html")
       getData("PLOOIAFDELING",val)
     });
     $("#divInDialog").on("click", "#poeder", function () {
       $('#editPage').dialog('open');
       $('#editPage').dialog('option', 'title', "POEDERLAKKEN");
-      var val = $(this).attr('id');
+      
       //$('#editForm').load("klbewForm.html")
       getData("POEDERLAKKEN",val)
     })
 
-
+// var outputData = {
+//   value:0,
+//   opmerk:0
+// }
     function sendInfo() {
-
-
-
-
+      var content = ""
       var gForm = $('#generalForm').serializeArray();
       //console.table(gForm)
       console.log(gForm)
@@ -352,30 +377,31 @@ $(function () {
       // var $form = $(this),
       //   term = $form.find("input[name='s']").val(),
       //   url = $form.attr("action");
-
-      // // Send the data using post
-
-
       gForm.forEach((element, i) => {
         if (element.name == 'boxCheck' && element.value == 'on') {
 
-          console.log("entries found!")
-          console.log(gForm[i + 1].name + " " + gForm[i + 1].value)
-          console.log(gForm[i + 2].name + " " + gForm[i + 2].value)
-
+          // console.log("entries found!")
+          // console.log(gForm[i + 1].name + " " + gForm[i + 1].name)
+          // console.log(gForm[i + 2].name + " " + gForm[i + 2].value)
+          //! -------------
+          //! Create data output log
+          // outputData.value[i] = gForm[i + 1].value
+          // outputData.opmerk[i] = gForm[i+2].value
+          //! -------------
           $.post('postInfo', {
             id: gForm[i + 1].name,
             verantw: gForm[i + 1].value,
             opmerking: gForm[i + 2].value
           }).done(function (data) {
-            var content = $(data).find("#content");
             // $("#result").empty().append(content);
-            
-          });
-        }
-      });
-      
+            // content += data;  
+        });
+        } 
 
+      });
+
+      
+      
       // // Put the results in a div
       //  posting.done(function (data) {
       //   var content = $(data).find("#content");
@@ -385,8 +411,6 @@ $(function () {
 
 
     }
-
-
   });
 
   function getData(val,employee) {
@@ -394,9 +418,6 @@ $(function () {
     $.get('/result.ejs', function (template) {
         // Compile the EJS template.
         var func = ejs.compile(template);
-
-        // Grab the data
-
         $.post('data', // url
         {
           user: val,
@@ -406,14 +427,9 @@ $(function () {
           console.log(Object.values(data))
           var html = func(data);
            $('#divResults').html(html);
-
         });
 
-
-
         // $.get('/data', function (data) {
-
-         
         //    // Generate the html from the given data.
         //    var html = func(data);
         //    $('#divResults').html(html);
@@ -422,7 +438,25 @@ $(function () {
 }
 
 
+function grabView(val,employee) {
+  // Grab the template
+  
+      // Compile the EJS template.
+      
+      $.post('viewR', // url
+      {
+        user: val,
+        username: employee
+      }, // data to be submit
+      function (data, status, jqXHR) { // success callback
+        console.log(Object.values(data))
+        var html = data;
 
+         var newWindow = window.open('/view');
 
+        // Access it using its variable
+         //newWindow.my_special_setting = "Hello World";
+      });
+}
 
 });

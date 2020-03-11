@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="other.css">
 </head>
 
-<form id="generalForm">
+<form id="generalForm" >
     <% data.forEach(function (d) {%>
     <% if(title == "ALGEMEEN"){ %> 
         <% if(d.documentnaam !== "ALGEMEEN") {return false} %>
@@ -32,5 +32,3 @@
         
     <% }); %>
 </form>
-
-<!-- <script src="effects.js"></script> -->

@@ -10,7 +10,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 
-const port = 8080;
+const port = 80;
 const hostname = '127.0.0.1'
 
 var testServer = false
@@ -62,6 +62,59 @@ app.get('/', (req, res) => {
       title: 'System Management'
     })
   })
+});
+
+var mainEmp = ""
+var mainInput = ""
+
+app.post('/viewR', (req,res)=>{
+  mainEmp = req.body.username;
+  mainInput = req.body.user;
+  res.redirect('/view')
+})
+app.get('/view', (req, res) => {
+  // console.log(employee)
+  // console.log(input)
+
+   var query = "SELECT * FROM [dbo].[Skillsmatrix_template] order by hfdnr, itemnr"
+  var dataE = "SELECT * FROM [dbo].[Skills_algemeen] where Employee ='" + mainEmp +"'order by hfdnr, itemnr";
+  var employeeCheck = "SELECT * FROM [dbo].[Employee] where Employee ='" + mainEmp + "'";
+
+  (async function (){
+    try {
+        pool = await sql.connect(config);
+        const res1 = await pool.request().query(query);
+        //processQryA(res1);
+        if(res1 != null){
+         // console.table(res1.recordset)
+        }
+        const res2 = await pool.request().query(dataE);
+        const res3 = await pool.request().query(employeeCheck);
+
+       // processQryB(res2);
+       if(res3 != null){
+       // console.table(res2.recordset)
+        res.render('view', {
+          title:mainInput,
+          data:res1.recordset,
+          eData:res2.recordset,
+          user:res3.recordset
+
+        })
+        sql.close()
+      }
+        //const res3 = await pool.request().query(getKleinebew);
+       // processQryC(res3);
+        //const res4 = await pool.request().query(getLaserAfd);
+       // processQryD(res4);
+        /*..And so on with rest of sequential queries*/
+        /*Any of them resulting in error will be caught in (catch)*/
+
+    } catch (error) {
+        console.error("Error in start()::", error);
+        sql.close()
+    }
+})()
 });
 
 //Push sql template and data
@@ -139,7 +192,7 @@ app.post('/postInfo', (req,res) => {
   })
   
 
-  res.send('Done')
+  res.send('Server Response: Values Updated')
 })
 
 app.post('/employeeData', (req, res) => {
@@ -148,13 +201,13 @@ app.post('/employeeData', (req, res) => {
     user: req.body.user
   }
   lastUser = reqData.user
-  var query = "SELECT * FROM [dbo].[Employee] where Employee ='" + reqData.user + "' order by Employee";
-  var getGeneral = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "' and hfdnr = '2'";
-  var getKleinebew = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '17' ";
-  var getLaserAfd = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '5' ";
-  var getPlooiAfd = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '11' ";
-  var getPoederAfd = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '14' ";
-  var getPonsAfd = "select * from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr = '8' ";
+  var query = "SELECT * FROM [dbo].[Employee] where Employee ='" + reqData.user + "'";
+  var getGeneral = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "' and hfdnr between 2 and 4";
+  var getKleinebew = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 17 and 19";
+  var getLaserAfd = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 5 and 7";
+  var getPlooiAfd = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 11 and 13";
+  var getPoederAfd = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 14 and 16";
+  var getPonsAfd = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 8 and 10";
   
   
   (async function (){
