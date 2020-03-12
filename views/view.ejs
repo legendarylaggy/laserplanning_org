@@ -125,7 +125,7 @@ today = mm + '/' + dd + '/' + yyyy;
             <% if(d.documentnaam !== "POEDERLAKKEN") {return false} %>
             <% } %>
 
-            <!-- <tr  > <td colspan = "6">Heading</td> </tr> -->
+            <% if(d.itemnr == 0){ %> <tr  > <td colspan = "6"><%- d.omschrijving %></td><% } %> </tr>
             <tr>
                 <td><% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>
                      OK <% } %> <% }); %> </td>
