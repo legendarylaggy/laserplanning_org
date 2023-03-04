@@ -1,0 +1,34 @@
+<head>
+    
+    <link rel="stylesheet" href="other.css">
+</head>
+
+<form id="generalForm" >
+    <% data.forEach(function (d) {%>
+    <% if(title == "ALGEMEEN"){ %> 
+        <% if(d.documentnaam !== "ALGEMEEN") {return false} %>
+    <% } else if(title == "KLEINE BEWERKINGEN"){ %>
+        <% if(d.documentnaam !== "KLEINE BEWERKINGEN") {return false} %>
+    <% } else if(title == "LASERAFDELING"){ %>
+        <% if(d.documentnaam !== "LASERAFDELING") {return false} %>
+    <% } else if(title == "PONSAFDELING"){ %>
+        <% if(d.documentnaam !== "PONSAFDELING") {return false} %>
+    <% } else if(title == "PLOOIAFDELING"){ %>
+        <% if(d.documentnaam !== "PLOOIAFDELING") {return false} %>
+    <% } else if(title == "POEDERLAKKEN"){ %>
+        <% if(d.documentnaam !== "POEDERLAKKEN") {return false} %>
+    <% } %>
+
+        <div class="layer">
+            <label for="boxCheck"><b><%- d.omschrijving %></b></label>
+            <input type="checkbox"  name="boxCheck"<% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>checked<% } %> <% }); %> >
+            <label> Verantw:</label>
+            <input type="text" class='entry' name="<%- d.hfdnr %>.<%- d.itemnr %>" <% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %> value="<%- c.verantw %>" <% } %> <% }); %> >
+            <label> Opmerking:</label>
+            <input type="text" name="<%- d.hfdnr %>.<%- d.itemnr %>"<% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %> value="<%- c.opmerking %>" <% } %> <% }); %> >
+            <br>
+            <br>
+        </div>
+        
+    <% }); %>
+</form>

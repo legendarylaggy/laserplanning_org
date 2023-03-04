@@ -1,0 +1,156 @@
+<Head>
+
+    <link rel="stylesheet" href="table.css">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css"
+        integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+</Head>
+<script>
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = mm + '/' + dd + '/' + yyyy;
+</script>
+
+<body>
+    <div id="content">
+        <table id="headTable" class="pure-table pure-table-bordered">
+            <thead>
+                <tr>
+                    <th rowspan="3"><img id="slabImg" width="220px" src="logo-slabinck.png" alt=""></th>
+                    <th rowspan="3">
+                        Opvolgingsformulier<br>
+                        Introductie Werknemer<br>
+                        <%- title %>
+                    </th>
+
+                    <th>
+                        <% if(title == "ALGEMEEN"){%> HR_RF_04 <%} %>
+                        <% if(title == "KLEINE BEWERKINGEN"){%> HR_RF_14 <%} %>
+                        <% if(title == "LASERAFDELING"){%> HR_RF_10 <%} %>
+                        <% if(title == "PONSAFDELING"){%> HR_RF_11 <%} %>
+                        <% if(title == "PLOOIAFDELING"){%> HR_RF_12 <%} %>
+                        <% if(title == "POEDERLAKKEN"){%> HR_RF_13 <%} %>
+                    </th>
+                    <th>
+                        Versie: 01
+                    </th>
+
+
+                </tr>
+                <tr>
+                    <th>
+                        Pagina 1 van 1
+                    </th>
+                    <th>
+                        <script>
+                            document.write(today);
+                        </script>
+                    </th>
+
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        Opgesteld door: Kimberly Loose
+                    </th>
+
+                </tr>
+                <tr>
+                    <th>Werknemer</th>
+                    <th>Init</th>
+                    <th colspan="2">Indiensttredingsdatum</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <tr>
+                    <td><%- user[0].First_Name + " " + user[0].Last_Name %></td>
+                    <td><%- user[0].Employee %></td>
+                    <td colspan="2">
+                        <%= user[0].Hire_Date.getDate() + "/" + (user[0].Hire_Date.getMonth()+1) + "/" + user[0].Hire_Date.getFullYear() %>
+                    </td>
+                </tr>
+
+            </tbody>
+
+
+        </table>
+        <br>
+        <% if(title == "ALGEMEEN"){ %>
+        <ol>
+            <li>
+                ALGEMEEN :
+            </li>
+            <p>
+                Het opvolgingsformulier “ introductie werknemer” heeft tot doel om te controleren of de operator ALLE
+                noodzakelijke informatie heeft ontvangen om een taak aan te vatten, en om op te volgen of deze operator
+                de
+                praktische kennis heeft om zijn taak uit te voeren.
+            </p>
+
+        </ol>
+        <% } %>
+        <!-- <% if(title == "KLEINE BEWERKINGEN"){ %> 
+    <ol>
+        <li>
+            AFDELINGSGEBONDEN PROCEDURES :
+        </li>
+        <li>
+            AFDELINGSGEBONDEN VEILIGHEIDSISSUES :
+        </li>
+        
+    </ol>
+    <% } %> -->
+        <table id="mainTable" class="pure-table pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>OK / NOK</th>
+                    <th>OMSCHRIJVING</th>
+                    <th>VERANTW.</th>
+                    <th>OPMERKINGEN</th>
+                    <th>PAR.</th>
+                    <th>DATUM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach(function (d) {%>
+                <% if(title == "ALGEMEEN"){ %>
+                <% if(d.documentnaam !== "ALGEMEEN") {return false} %>
+                <% } else if(title == "KLEINE BEWERKINGEN"){ %>
+                <% if(d.documentnaam !== "KLEINE BEWERKINGEN") {return false} %>
+                <% } else if(title == "LASERAFDELING"){ %>
+                <% if(d.documentnaam !== "LASERAFDELING") {return false} %>
+                <% } else if(title == "PONSAFDELING"){ %>
+                <% if(d.documentnaam !== "PONSAFDELING") {return false} %>
+                <% } else if(title == "PLOOIAFDELING"){ %>
+                <% if(d.documentnaam !== "PLOOIAFDELING") {return false} %>
+                <% } else if(title == "POEDERLAKKEN"){ %>
+                <% if(d.documentnaam !== "POEDERLAKKEN") {return false} %>
+                <% } %>
+
+                
+                <tr <% if(d.omschrijving.length < 1){ %> style ="height: 40px" <% } %></tr>
+                    <% if(d.itemnr == 0){ %>
+                        
+                            <td colspan="6"><b><%- d.omschrijving %>:</b></td>
+                    <% } else {%>
+
+                    <td><% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>
+                        OK <% } %> <% }); %> </td>
+                    <td><%- d.omschrijving %></td>
+                    <td><% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>
+                        <%- c.verantw %><% } %> <% }); %> </td>
+                    <td><% eData.forEach(function (c) { %> <% if(d.hfdnr == c.hfdnr && d.itemnr == c.itemnr){ %>
+                        <%- c.opmerking %><% } %> <% }); %> </td>
+                    <td> </td>
+                    <td> </td>
+                    
+                
+                <% } %>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</body>

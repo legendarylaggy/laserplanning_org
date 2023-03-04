@@ -10,8 +10,10 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 
-const port = 8080;
+const port = 80;
 const hostname = '127.0.0.1'
+
+var testServer = false
 
 var config = {
   user: 'sa',
@@ -22,6 +24,19 @@ var config = {
   parseJSON: 'true',
 };
 
+var testDB = {
+  user: 'sa',
+  password: 'johnwalker32',
+  server: 'localhost',
+  database: 'master',
+  parseJson: 'true'
+}
+
+var lastUser = ''
+
+if (testServer == true) {
+  config = testDB
+}
 var app = express();
 
 app.set('view engine', 'ejs');
@@ -32,14 +47,15 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.render('index', {
-    title: 'Order Entry'
-  });
-});
+// app.get('/', (req, res) => {
+//   res.render('index', {
+//     title: 'Order Entry'
+//   });
+// });
 // * Main System Management 
-app.get('/edit', (req, res) => {
-  fetchLaserSQL(data => {
+app.get('/', (req, res) => {
+  //console.log(config)
+  employeSQL(data => {
     //console.table(data.recordset)
     res.render('edit', {
       output: data.recordset,
@@ -47,6 +63,205 @@ app.get('/edit', (req, res) => {
     })
   })
 });
+
+var mainEmp = ""
+var mainInput = ""
+
+app.post('/viewR', (req,res)=>{
+  mainEmp = req.body.username;
+  mainInput = req.body.user;
+  res.redirect('/view')
+})
+app.get('/view', (req, res) => {
+  // console.log(employee)
+  // console.log(input)
+
+   var query = "SELECT * FROM [dbo].[Skillsmatrix_template] order by hfdnr, itemnr"
+  var dataE = "SELECT * FROM [dbo].[Skills_algemeen] where Employee ='" + mainEmp +"'order by hfdnr, itemnr";
+  var employeeCheck = "SELECT * FROM [dbo].[Employee] where Employee ='" + mainEmp + "'";
+
+  (async function (){
+    try {
+        pool = await sql.connect(config);
+        const res1 = await pool.request().query(query);
+        //processQryA(res1);
+        if(res1 != null){
+         // console.table(res1.recordset)
+        }
+        const res2 = await pool.request().query(dataE);
+        const res3 = await pool.request().query(employeeCheck);
+
+       // processQryB(res2);
+       if(res3 != null){
+       // console.table(res2.recordset)
+        res.render('view', {
+          title:mainInput,
+          data:res1.recordset,
+          eData:res2.recordset,
+          user:res3.recordset
+
+        })
+        sql.close()
+      }
+        //const res3 = await pool.request().query(getKleinebew);
+       // processQryC(res3);
+        //const res4 = await pool.request().query(getLaserAfd);
+       // processQryD(res4);
+        /*..And so on with rest of sequential queries*/
+        /*Any of them resulting in error will be caught in (catch)*/
+
+    } catch (error) {
+        console.error("Error in start()::", error);
+        sql.close()
+    }
+})()
+});
+
+//Push sql template and data
+app.post('/data', function (req, res) {
+  var input = "null"
+  var employee = ""
+  input = req.body.user;
+  employee = req.body.username
+  // skillTemplateSQL(data=> {
+  //   res.send({ 
+  //     data: data,
+  //     title: input });
+  // })
+  var query = "SELECT * FROM [dbo].[Skillsmatrix_template] order by hfdnr, itemnr"
+  var dataE = "SELECT * FROM [dbo].[Skills_algemeen] where Employee ='" + employee +"'order by hfdnr, itemnr";
+
+  (async function (){
+    try {
+        pool = await sql.connect(config);
+        const res1 = await pool.request().query(query);
+        //processQryA(res1);
+        if(res1 != null){
+         // console.table(res1.recordset)
+        }
+        const res2 = await pool.request().query(dataE);
+
+       // processQryB(res2);
+       if(res2 != null){
+       // console.table(res2.recordset)
+        res.send({
+          title:input,
+          data:res1.recordset,
+          eData:res2.recordset,
+
+        })
+        sql.close()
+      }
+        //const res3 = await pool.request().query(getKleinebew);
+       // processQryC(res3);
+        //const res4 = await pool.request().query(getLaserAfd);
+       // processQryD(res4);
+        /*..And so on with rest of sequential queries*/
+        /*Any of them resulting in error will be caught in (catch)*/
+
+    } catch (error) {
+        console.error("Error in start()::", error);
+        sql.close()
+    }
+})()
+  console.log(input)
+});
+
+
+
+app.post('/postInfo', (req,res) => {
+  var inData = {
+    gen1: req.body.id,
+    gen2: req.body.verantw,
+    gen3: req.body.opmerking
+  }
+  var gen = inData.gen1.split('.')
+  console.log(lastUser)
+  console.log(gen[0] + " " + gen[1])
+  console.log(inData.gen2)
+  console.log(inData.gen3)
+
+  //var updateQuery = ""
+  checkStatus(lastUser,gen[0],gen[1],data =>{
+    if(data > 0){
+      updateSQLValues(lastUser,gen[0],gen[1],inData.gen2,inData.gen3)
+    }
+    else{
+      createNewSQLValues(lastUser,gen[0],gen[1],inData.gen2,inData.gen3)
+    }
+  })
+  
+
+  res.send('Server Response: Values Updated')
+})
+
+app.post('/employeeData', (req, res) => {
+
+  var reqData = {
+    user: req.body.user
+  }
+  lastUser = reqData.user
+  var query = "SELECT * FROM [dbo].[Employee] where Employee ='" + reqData.user + "'";
+  var getGeneral = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "' and hfdnr between 2 and 4";
+  var getKleinebew = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 17 and 19";
+  var getLaserAfd = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 5 and 7";
+  var getPlooiAfd = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 11 and 13";
+  var getPoederAfd = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 14 and 16";
+  var getPonsAfd = "select count(*) as dig from [dbo].[Skills_algemeen] where Employee ='" + reqData.user + "'and hfdnr between 8 and 10";
+  
+  
+  (async function (){
+    try {
+        pool = await sql.connect(config);
+        const res1 = await pool.request().query(query);
+        //processQryA(res1);
+        if(res1 != null){
+         // console.table(res1.recordset)
+        }
+        const res2 = await pool.request().query(getGeneral);
+        const res3 = await pool.request().query(getKleinebew);
+        const res4 = await pool.request().query(getLaserAfd);
+        const res5 = await pool.request().query(getPlooiAfd);
+        const res6 = await pool.request().query(getPoederAfd);
+        const res7 = await pool.request().query(getPonsAfd);
+       // processQryB(res2);
+       if(res7 != null){
+       // console.table(res2.recordset)
+        res.send({
+          output:res1.recordset,
+          output2:res2.recordset,
+          output3:res3.recordset,
+          output4:res4.recordset,
+          output5:res5.recordset,
+          output6:res6.recordset,
+          output7:res7.recordset
+        })
+        sql.close()
+      }
+        //const res3 = await pool.request().query(getKleinebew);
+       // processQryC(res3);
+        //const res4 = await pool.request().query(getLaserAfd);
+       // processQryD(res4);
+        /*..And so on with rest of sequential queries*/
+        /*Any of them resulting in error will be caught in (catch)*/
+
+    } catch (error) {
+        console.error("Error in start()::", error);
+        sql.close()
+    }
+})()
+
+
+  
+  
+  // fetchEmployeeData(query,getGeneral, data => {
+  //   //console.table(data.data[0])
+  //   res.send({
+  //     output: data.recordset
+  //   })
+  // })
+})
+
 
 app.get('/sql', (req, res) => { // ? DEBUG INFO ?
   fetchLaserSQL(data => {
@@ -111,7 +326,7 @@ app.post('/editInfo', (req, res) => {
 
   if (check == 0) { // NESTING
     value++
-    if (value > 2){
+    if (value > 2) {
       value = 0;
     }
     valueComp = value
@@ -189,13 +404,13 @@ app.post('/submitInfo', (req, res) => {
         fetchSQLq(connection, query, data => {
 
           //console.log(data.recordset[0].value)
-          if (typeof data != 'undefined' && data.recordset[0] != undefined ) { // * DEB-1 check if sql returned value otherwise give current date 
-            console.log("order: "+ fetch)
+          if (typeof data != 'undefined' && data.recordset[0] != undefined) { // * DEB-1 check if sql returned value otherwise give current date 
+            console.log("order: " + fetch)
             if (outputDate > data.recordset[0].value) {
               outputDate = data.recordset[0].value
               reqData.orderDate = outputDate
             }
-          } else{
+          } else {
             reqData.orderDate = new Date;
             console.log("Error at DEB-1")
             console.log(fetch)
@@ -235,6 +450,49 @@ function fetchLaserSQL(callback) {
   })
 }
 
+
+function fetchEmployeeData(query,newQ,callback) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+    // console.log(err)
+    req.query(query, (err, recordset) => {
+      //console.log(err)
+      callback(recordset)
+    })
+    req.query(newQ, (err, recordset) => {
+      callback(recordset)
+    })
+  })
+
+}
+
+function employeSQL(callback) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+    // console.log(err)
+    // // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("SELECT * FROM [dbo].[Employee] where Status = 'Active' order by First_Name ", (err, recordset) => {
+      //console.log(err)
+      callback(recordset)
+    })
+  })
+}
+
+function skillTemplateSQL(callback) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+    // console.log(err)
+    // // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("SELECT * FROM [dbo].[Skillsmatrix_template] order by hfdnr, itemnr", (err, recordset) => {
+      //console.log(err)
+      callback(recordset.recordset)
+    })
+  })
+}
+
+
 // Grab one row
 function fetchSQLID(callback) {
   var connection = new sql.ConnectionPool(config, (err) => {
@@ -242,10 +500,47 @@ function fetchSQLID(callback) {
 
     // TODO Pons query function
     // ! Change this for Pons (where machineType = '2')
-    req.query("SELECT * FROM [dbo].[ProgramInput] WHERE machineType = '1' and id like '200'  ORDER BY  jobComplete DESC , priority DESC, jobDate ASC, [nesting] ASC", (err, recordset) => {
+    req.query("SELECT * FROM [dbo].[Employee] where Status = 'Active' order by First_Name ", (err, recordset) => {
       callback(recordset)
     })
   })
+}
+
+
+function checkStatus(employee,hfdnr,itemnr,callback) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+
+    // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("Select count(*) as rowAmount from skills_algemeen where employee = '" + employee +"' and hfdnr =" + hfdnr +" and itemnr =" + itemnr, (err, recordset) => {
+      callback(recordset.recordset[0].rowAmount)
+    })
+  })
+}
+function updateSQLValues(employee,hfdnr,itemnr,verantw,opmerking) {
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+
+    // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("update skills_algemeen set ok = 1, verantw ='"+ verantw +"', opmerking = '"+ opmerking +"', signed = 1, tijdupdate = GETDATE() where employee = '" + employee +"' and hfdnr =" + hfdnr +" and itemnr =" + itemnr, (err, recordset) => {
+      console.log(recordset.rowsAffected)
+    })
+  })
+}
+function createNewSQLValues(emp,hfdnr,itemnr,verantw,opmerking){
+  var connection = new sql.ConnectionPool(config, (err) => {
+    var req = new sql.Request(connection)
+
+    // TODO Pons query function
+    // ! Change this for Pons (where machineType = '2')
+    req.query("insert into skills_algemeen (employee,hfdnr, itemnr, ok, verantw, opmerking, signed, tijdupdate) Values('"+emp+"',"+hfdnr+","+itemnr+",1,'"+verantw+"','"+opmerking+"', 1, GETDATE())", (err, recordset) => {
+      console.log(err)
+      console.log(recordset)
+    })
+  })
+  
 }
 
 // Grab Laser tables
@@ -259,7 +554,7 @@ function fetchPonsSQL(callback) {
       callback(recordset)
     })
   })
-} 
+}
 
 //Grab selected tables + pass open connection
 function fetchSQLq(connection, query, callback) {

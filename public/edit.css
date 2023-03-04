@@ -1,11 +1,10 @@
 #main-container {
     
-    width: 1400px;
     margin: 0 auto;
     margin-top: 20px;
 }
 .mainTable{
-    margin-top: 10px;
+    margin: 0 auto;
 }
 #tableSearch{
     width: 200px;
@@ -14,4 +13,16 @@
 .infoRow:hover{
     background-color: bisque;
 
+}
+.button-xsmall {
+    font-size: 70%;
+}
+#searchArea{
+    text-align: center;
+}
+.infoRow{
+    cursor: pointer;
+}
+#divInDialog{
+    text-align: end;
 }
